@@ -305,6 +305,7 @@
 @implementation MVDocument
 
 @synthesize dataController;
+@synthesize threadCount;
 
 enum ViewType
 {    
@@ -453,7 +454,8 @@ enum ViewType
     NSString * threadState = [[notification userInfo] objectForKey:MVStatusUserInfoKey];
     if ([threadState isEqualToString:MVStatusTaskStarted] == YES)
     {
-      if (OSAtomicIncrement32(&threadCount) == 1)
+        threadCount++;
+      if (threadCount == 1 && NSThread.currentThread.isMainThread)
       {
         [progressIndicator setUsesThreadedAnimation:YES];
         [progressIndicator startAnimation:nil];
@@ -462,7 +464,8 @@ enum ViewType
     }
     else if ([threadState isEqualToString:MVStatusTaskTerminated] == YES)
     {
-      if (OSAtomicDecrement32(&threadCount) == 0)
+        threadCount--;
+        if (threadCount == 0 && NSThread.currentThread.isMainThread)
       {
         [progressIndicator stopAnimation:nil]; 
         [statusText setStringValue:@""];

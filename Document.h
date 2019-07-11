@@ -37,9 +37,9 @@
   IBOutlet NSSegmentedControl *   offsetModeSwitch;
   IBOutlet NSButton *             stopButton;
   MVDataController *              dataController;
-  int32_t                         threadCount;
 }
 @property (nonatomic,readonly) MVDataController * dataController;
+@property (atomic,assign) int32_t  threadCount;
 
 - (IBAction)updateSearchFilter:(id)sender;
 - (IBAction)updateAddressingMode:(id)sender;
